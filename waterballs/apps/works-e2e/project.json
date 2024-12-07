@@ -1,0 +1,10 @@
+{
+  "name": "works-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/works-e2e/src",
+  "tags": [],
+  "implicitDependencies": ["works"],
+  "// targets": "to see all targets run: nx show project works-e2e --web",
+  "targets": {}
+}
