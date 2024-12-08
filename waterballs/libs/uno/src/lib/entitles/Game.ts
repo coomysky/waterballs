@@ -16,7 +16,7 @@ export class Game {
     }
 
     public setPlayers(players: Player[]) {
-        if (players.length <= 4) {
+        if (players.length !== 4) {
             throw new Error("should has 4 players");
         }
         this.players = players;
