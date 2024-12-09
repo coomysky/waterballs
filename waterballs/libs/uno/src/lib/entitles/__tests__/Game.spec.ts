@@ -73,4 +73,38 @@ describe('Game Initialization', () => {
         });
 
     });
+
+    describe('Game Start', () => {
+        beforeEach(() => {
+            const players: Player[] = [
+                new Player(),
+                new Player(),
+                new Player(),
+                new Player()
+            ];
+            game.setPlayers(players);
+        });
+
+        it('應該要在遊戲開始時翻出第一張牌且放到檯面上', () => {
+        
+            expect(game.getTableCards().length).toBe(0); // 遊戲開始前檯面上沒有牌
+
+            
+            game.start();
+            
+            const currentCard = game.getCurrentCard();
+            const tableCards = game.getTableCards()
+            expect(tableCards).not.toBeNull(); // 遊戲開始後檯面上有牌
+            expect(currentCard).toEqual(tableCards[0]); // 最新的牌應該跟是檯面上的牌一樣
+
+        });
+
+        it('翻出的牌應該要從牌堆中移除', () => {
+            const initialDeckCount = game.getDeck().getCardsCount();
+            
+            game.start();
+            
+            expect(game.getDeck().getCardsCount()).toBe(initialDeckCount - 1);
+        });
+    });
 });

@@ -51,4 +51,13 @@ export class Game {
         return this.deck;
     }
 
+    public start(): void {
+        this.deck.shuffle();
+        const card = this.deck.drawCard();
+        if (!card) {
+            throw new Error("Deck is empty");
+        }
+        this.setTableCards(card);
+    }
+
 }
