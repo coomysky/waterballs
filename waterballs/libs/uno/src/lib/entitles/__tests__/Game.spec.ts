@@ -1,5 +1,6 @@
 import { Game } from '../Game';
 import { Player } from '../Player';
+import { Deck } from '../Deck';
 
 describe('Game Initialization', () => {
     let game: Game;
@@ -74,6 +75,41 @@ describe('Game Initialization', () => {
 
     });
 
+    describe('初始抽牌每個玩家手中要有五張手牌', () => {
+        let players: Player[];
+
+        beforeEach(() => {
+            players = [
+                new Player(),
+                new Player(),
+                new Player(),
+                new Player()
+            ];
+            game.setPlayers(players);
+        });
+
+       
+
+        it('每個人要發五張牌', () => {
+            game.drawInitCard();
+            
+            for (const player of players) {
+                expect(player.getCards().length).toBe(5);
+            }
+        });
+
+        it('牌堆沒牌抽不到牌應該要拋錯誤', () => {
+            // Create a deck with only 19 cards (not enough for 4 players to get 5 cards each)
+            const deck = new Deck();
+            for (let i = 0; i < 21; i++) {
+                deck.drawCard();  // Remove cards until there aren't enough
+            }
+            game.setDeck(deck);
+
+            expect(() => game.drawInitCard()).toThrow('Not enough cards in deck for draw phase');
+        });
+    });
+
     describe('Game Start', () => {
         beforeEach(() => {
             const players: Player[] = [
@@ -107,4 +143,5 @@ describe('Game Initialization', () => {
             expect(game.getDeck().getCardsCount()).toBe(initialDeckCount - 1);
         });
     });
+
 });

@@ -60,4 +60,20 @@ export class Game {
         this.setTableCards(card);
     }
 
+    public drawInitCard(): void {
+        if (this.players.length !== 4) {
+            throw new Error("Cannot start draw phase without 4 players");
+        }
+
+        // 每個人抽五張牌
+        for (let i = 0; i < 5; i++) {
+            for (const player of this.players) {
+                const card = this.deck.drawCard();
+                if (!card) {
+                    throw new Error("Not enough cards in deck for draw phase");
+                }
+                player.addCard(card);
+            }
+        }
+    }
 }

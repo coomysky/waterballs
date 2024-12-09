@@ -1,5 +1,8 @@
+import { Card } from './Card';
+
 export class Player {
     private name: string;
+    private cards: Card[] = [];
     private static usedNames: Set<string> = new Set();
 
     constructor() {
@@ -25,5 +28,13 @@ export class Player {
 
     public getName(): string {
         return this.name;
+    }
+
+    public addCard(card: Card): void {
+        this.cards.push(card);
+    }
+
+    public getCards(): Card[] {
+        return [...this.cards];
     }
 }
