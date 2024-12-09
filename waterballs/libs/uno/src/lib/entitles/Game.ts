@@ -1,5 +1,5 @@
 import { Deck } from "./Deck";
-import { Card } from "./Gard";
+import { Card } from "./Card";
 import { Player } from "./Player";
 
 export class Game {
