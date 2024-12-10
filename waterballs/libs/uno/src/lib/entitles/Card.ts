@@ -22,8 +22,8 @@ export class Card {
     public getNumber(): number {
         return this.number;
     }
-    //NOTE: the color and number must be the same
+    //NOTE: the color or number must be the same
     public isPlayable(other: Card): boolean {
-        return this.color === other.color && this.number === other.number;
+        return this.color === other.color || this.number === other.number;
     }
 }

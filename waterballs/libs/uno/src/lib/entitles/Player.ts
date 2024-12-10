@@ -3,7 +3,6 @@ import { Card } from './Card';
 export class Player {
     private name: string;
     private cards: Card[] = [];
-    private static usedNames: Set<string> = new Set();
 
     constructor() {
         this.name =  '';
@@ -13,17 +12,8 @@ export class Player {
         if (!name) {
             throw new Error('Player name cannot be empty');
         }
-        
-        if (Player.usedNames.has(name)) {
-            throw new Error('Name already taken');
-        }
-
-        if (this.name) {
-            Player.usedNames.delete(this.name);
-        }
 
         this.name = name;
-        Player.usedNames.add(name);
     }
 
     public getName(): string {
@@ -36,5 +26,17 @@ export class Player {
 
     public getCards(): Card[] {
         return [...this.cards];
+    }
+
+    public playCard(card: Card): Card {
+        const index = this.cards.findIndex(c => c.getColor() === card.getColor() && c.getNumber() === card.getNumber());
+        if (index === -1) {
+            throw new Error('Card not in hand');
+        }
+        return this.cards.splice(index, 1)[0];
+    }
+
+    public hasPlayableCard(currentCard: Card): boolean {
+        return this.cards.some(card => card.isPlayable(currentCard));
     }
 }

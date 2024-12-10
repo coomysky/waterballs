@@ -144,4 +144,101 @@ describe('Game Initialization', () => {
         });
     });
 
+    describe('輪流出牌', () => {
+        let players: Player[];
+        let deck: Deck;
+
+        beforeEach(() => {
+            players = [
+                new Player(),
+                new Player(),
+                new Player(),
+                new Player()
+            ];
+            game.setPlayers(players);
+            
+            // 初始化牌堆
+            deck = new Deck();
+            game.setDeck(deck);
+            
+            // 開始遊戲
+            game.start();
+            game.drawInitCard();
+        });
+
+        it('玩家應該按照順序輪流出牌', () => {
+            const firstPlayer = game.getCurrentPlayer();
+            expect(firstPlayer).toBe(players[0]);
+
+            // 假設第一位玩家出了一張牌
+            game.playCard(firstPlayer.getCards()[0]);
+            expect(game.getCurrentPlayer()).toBe(players[1]);
+
+            // 第二位玩家出牌
+            game.playCard(players[1].getCards()[0]);
+            expect(game.getCurrentPlayer()).toBe(players[2]);
+
+            // 第三位玩家出牌
+            game.playCard(players[2].getCards()[0]);
+            expect(game.getCurrentPlayer()).toBe(players[3]);
+
+            // 第四位玩家出牌
+            game.playCard(players[3].getCards()[0]);
+            expect(game.getCurrentPlayer()).toBe(players[0]); // 回到第一位玩家
+        });
+
+        it('玩家出的牌必須與檯面上的牌顏色或數字相同', () => {
+            const currentPlayer = game.getCurrentPlayer();
+            const topCard = game.getCurrentCard();
+            if (!topCard) {
+                throw new Error('No card on table');
+            }
+
+            // 創建一張不能出的牌（顏色和數字都不同）
+            let invalidColor = Object.values(Color).find(color => color !== topCard.getColor());
+            if (!invalidColor) {
+                throw new Error('Cannot find invalid color');
+            }
+            const invalidCard = new Card(invalidColor, (topCard.getNumber() + 1) % 10);
+            
+            // 將這張牌加入玩家手牌
+            currentPlayer.addCard(invalidCard);
+            
+            // 嘗試出這張牌應該會失敗
+            expect(() => game.playCard(invalidCard)).toThrow('Card is not playable');
+        });
+
+        it('當牌堆沒牌時，應該重新洗牌', () => {
+            // 抽光牌堆中的牌
+            while (game.getDeck().getCardsCount() > 0) {
+                game.getDeck().drawCard();
+            }
+
+            // 當前玩家抽牌
+            game.drawCardFromDeck();
+
+            // 確認玩家有拿到牌（表示重新洗牌成功）
+            expect(game.getCurrentPlayer().getCards().length).toBeGreaterThan(0);
+        });
+
+        it('玩家手上沒有可出的牌時必須抽牌', () => {
+            const currentPlayer = game.getCurrentPlayer();
+            const initialHandSize = currentPlayer.getCards().length;
+            const topCard = game.getCurrentCard();
+            if (!topCard) {
+                throw new Error('No card on table');
+            }
+
+            // 確保玩家手上沒有可出的牌
+            while (currentPlayer.hasPlayableCard(topCard)) {
+                currentPlayer.playCard(currentPlayer.getCards()[0]);
+            }
+
+            // 玩家抽牌
+            game.drawCardFromDeck();
+
+            // 確認玩家手牌數量增加
+            expect(game.getCurrentPlayer().getCards().length).toBe(initialHandSize + 1);
+        });
+    });
 });

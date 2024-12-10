@@ -7,12 +7,15 @@ export class Game {
     private tableCards: Card[];
     private currentCard: Card | null;
     private deck: Deck;
+    private currentPlayerIndex : number;
 
     constructor() {
         this.players = [];
         this.tableCards = [];
         this.currentCard = null;
-        this.deck = new Deck()
+        this.deck = new Deck();
+        this.currentPlayerIndex = 0;
+
     }
 
     public setPlayers(players: Player[]) {
@@ -51,6 +54,10 @@ export class Game {
         return this.deck;
     }
 
+    public getCurrentPlayer(): Player {
+        return this.players[this.currentPlayerIndex];
+    }
+
     public start(): void {
         this.deck.shuffle();
         const card = this.deck.drawCard();
@@ -75,5 +82,62 @@ export class Game {
                 player.addCard(card);
             }
         }
+    }
+
+    public playCard(card: Card): void {
+        const currentPlayer = this.getCurrentPlayer();
+        
+        if (!this.currentCard) {
+            throw new Error('No current card on table');
+        }
+
+        if (!card.isPlayable(this.currentCard)) {
+            throw new Error('Card is not playable');
+        }
+
+        const playedCard = currentPlayer.playCard(card);
+        this.setTableCards(playedCard);
+        this.nextTurn();
+    }
+
+    public drawCardFromDeck(): void {
+        const currentPlayer = this.getCurrentPlayer();
+        const card = this.deck.drawCard();
+        
+        if (!card) {
+            this.reshuffleTableCards();
+            const newCard = this.deck.drawCard();
+            if (!newCard) {
+                throw new Error('No cards left in deck after reshuffle');
+            }
+            currentPlayer.addCard(newCard);
+        } else {
+            currentPlayer.addCard(card);
+        }
+        
+        this.nextTurn();
+    }
+
+    private nextTurn(): void {
+        this.currentPlayerIndex = (this.currentPlayerIndex + 1) % 4;
+    }
+
+    private reshuffleTableCards(): void {
+        if (this.tableCards.length <= 1) {
+            return;
+        }
+        
+        // Keep the top card
+        const topCard = this.tableCards.pop();
+        
+        // Add remaining cards back to deck and shuffle
+        this.tableCards.forEach(card => this.deck.setCards(card));
+        this.tableCards = [];
+        
+        if (topCard) {
+            this.setTableCards(topCard);
+        }
+        
+        this.deck.shuffle();
     }
 }
