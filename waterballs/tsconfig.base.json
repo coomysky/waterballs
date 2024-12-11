@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@waterballs/pokeCompair": ["libs/pokeCompair/src/index.ts"],
       "@waterballs/uno": ["libs/uno/src/index.ts"]
     }
   },
