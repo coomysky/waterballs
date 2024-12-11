@@ -2,7 +2,6 @@
   "name": "@waterballs/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
   "private": true,
   "dependencies": {
     "@nrwl/js": "^19.8.4",
