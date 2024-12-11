@@ -41,6 +41,8 @@ describe('遊戲流程測試', () => {
                 
                 // 每個回合都應該有出牌
                 game.playRound();
+
+                expect(game.getPlayedCards().length).toBe(4);
                 
                 // 檢查回合數增加
                 expect(game.getCurrentRound()).toBe(i + 1);
@@ -88,6 +90,95 @@ describe('遊戲流程測試', () => {
             // 確認不能與自己換手牌
             expect(() => game.exchangeHands(players[2], players[2]))
                 .toThrow('Cannot exchange hands with yourself');
+        });
+    });
+
+    describe('真人玩家測試', () => {
+        let game: Game;
+        let humanPlayer: Player;
+        let aiPlayers: Player[];
+
+        beforeEach(() => {
+            game = new Game();
+            humanPlayer = new Player();
+            humanPlayer.setName('Human');
+            humanPlayer.setIsHuman(true);
+
+            aiPlayers = Array(3).fill(null).map((_, i) => {
+                const player = new Player();
+                player.setName(`AI${i + 1}`);
+                player.setIsHuman(false);
+                return player;
+            });
+
+            // 設置所有玩家
+            game.startGame([humanPlayer, ...aiPlayers]);
+        });
+
+        it('真人玩家必須手動選擇卡牌', () => {
+            // 檢查初始狀態
+            expect(humanPlayer.getCards().length).toBe(13);
+            
+            // 嘗試直接調用 takeRound 應該拋出錯誤
+            expect(() => humanPlayer.takeRound())
+                .toThrow('Human player must choose a card');
+            
+            // 手動選擇一張牌
+            const selectedCard = humanPlayer.getCards()[0];
+            const playedCard = humanPlayer.showCard(selectedCard);
+            
+            // 確認卡牌被正確打出
+            expect(playedCard).toBeDefined();
+            expect(playedCard.equals(selectedCard)).toBe(true);
+            expect(humanPlayer.getCards().length).toBe(12);
+        });
+
+        it('真人玩家可以選擇與其他玩家換牌', () => {
+            // 記錄初始手牌
+            const humanCards = [...humanPlayer.getCards()];
+            const aiCards = [...aiPlayers[0].getCards()];
+            
+            // 執行換牌
+            humanPlayer.selectExchangeHands(aiPlayers[0]);
+            
+            // 驗證手牌已經交換
+            expect(humanPlayer.getCards()).toEqual(aiCards);
+            expect(aiPlayers[0].getCards()).toEqual(humanCards);
+            
+            // 確認已經使用過換牌特權
+            expect(humanPlayer.getHasChangeHands()).toBe(true);
+            
+            // 不能再次換牌
+            expect(() => humanPlayer.selectExchangeHands(aiPlayers[1]))
+                .toThrow('Exchange hands privilege already used');
+        });
+
+        it('真人玩家不能與自己換牌', () => {
+            expect(() => humanPlayer.selectExchangeHands(humanPlayer))
+                .toThrow('Cannot exchange hands with yourself');
+        });
+
+
+        it('回合中有玩家沒有手牌的情況', () => {
+            // 移除真人玩家的所有手牌
+            while (humanPlayer.getCards().length > 0) {
+                const card = humanPlayer.getCards()[0];
+                humanPlayer.showCard(card);
+            }
+            
+            // 執行回合
+            game.playRound();
+            
+            // 檢查只有還有手牌的玩家出牌
+            const playedCards = game.getPlayedCards();
+            expect(playedCards.length).toBe(3); // 只有3個AI玩家出牌
+            
+            // 確認沒有手牌的玩家沒有參與這回合
+            const playedPlayerNames = playedCards.map(pc => pc.player.getName());
+            expect(playedPlayerNames).not.toContain(humanPlayer.getName());
+            
+            // 檢查回合數仍然正確增加
+            expect(game.getCurrentRound()).toBe(1);
         });
     });
 });
