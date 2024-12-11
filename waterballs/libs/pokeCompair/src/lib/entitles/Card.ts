@@ -40,4 +40,25 @@ export class Card {
     public set Suit(suit: CardSuit) {
         this.suit = suit;
     }
+
+    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
+    public get Rank(): CardRank {
+        return this.rank;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
+    public get Suit(): CardSuit {
+        return this.suit;
+    }
+
+    public equals(other: Card): boolean {
+        return this.rank === other.rank && this.suit === other.suit;
+    }
+
+    public compareTo(other: Card): number {
+        if (this.rank === other.rank) {
+            return this.suit - other.suit;
+        }
+        return this.rank - other.rank;
+    }
 }

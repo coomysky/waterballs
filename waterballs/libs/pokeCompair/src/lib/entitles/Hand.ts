@@ -26,4 +26,20 @@ export class Hand {
     public getCards(): Card[] {
         return [...this.cards];
     }
+
+    public removeCard(indexOrCard: number | Card): Card {
+        let index: number;
+        if (indexOrCard instanceof Card) {
+            index = this.cards.findIndex(c => c.equals(indexOrCard));
+            if (index === -1) {
+                throw new Error('Card not found in hand');
+            }
+        } else {
+            index = indexOrCard;
+            if (index < 0 || index >= this.cards.length) {
+                throw new Error('Invalid card index');
+            }
+        }
+        return this.cards.splice(index, 1)[0];
+    }
 }   
