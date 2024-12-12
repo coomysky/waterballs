@@ -1,5 +1,7 @@
 import { Game } from '../Game';
 import { Player } from '../Player';
+import { HumanPlayer } from '../HumanPlayer';
+import { AIPlayer } from '../AIPlayer';
 
 describe('遊戲流程測試', () => {
     let game: Game;
@@ -8,16 +10,15 @@ describe('遊戲流程測試', () => {
     beforeEach(() => {
         game = new Game();
         players = [
-            new Player(),
-            new Player(),
-            new Player(),
-            new Player()
+            new AIPlayer(),
+            new AIPlayer(),
+            new AIPlayer(),
+            new AIPlayer()
         ];
 
-        // 設置玩家名稱和類型
+        // 設置玩家名稱
         players.forEach((player, index) => {
             player.setName(`P${index + 1}`);
-            player.setIsHuman(false); // 在測試中都設為 AI 玩家
         });
     });
 
@@ -95,19 +96,17 @@ describe('遊戲流程測試', () => {
 
     describe('真人玩家測試', () => {
         let game: Game;
-        let humanPlayer: Player;
-        let aiPlayers: Player[];
+        let humanPlayer: HumanPlayer;
+        let aiPlayers: AIPlayer[];
 
         beforeEach(() => {
             game = new Game();
-            humanPlayer = new Player();
+            humanPlayer = new HumanPlayer();
             humanPlayer.setName('Human');
-            humanPlayer.setIsHuman(true);
 
             aiPlayers = Array(3).fill(null).map((_, i) => {
-                const player = new Player();
+                const player = new AIPlayer();
                 player.setName(`AI${i + 1}`);
-                player.setIsHuman(false);
                 return player;
             });
 
@@ -125,12 +124,24 @@ describe('遊戲流程測試', () => {
             
             // 手動選擇一張牌
             const selectedCard = humanPlayer.getCards()[0];
-            const playedCard = humanPlayer.showCard(selectedCard);
+            const playedCard = humanPlayer.chooseCard(selectedCard);
             
             // 確認卡牌被正確打出
             expect(playedCard).toBeDefined();
             expect(playedCard.equals(selectedCard)).toBe(true);
             expect(humanPlayer.getCards().length).toBe(12);
+        });
+
+        it('真人玩家不能選擇不存在於手牌中的卡牌', () => {
+            // 從另一個玩家取得一張牌
+            const otherPlayerCard = aiPlayers[0].getCards()[0];
+            
+            // 嘗試選擇不存在於手牌中的卡牌應該拋出錯誤
+            expect(() => humanPlayer.chooseCard(otherPlayerCard))
+                .toThrow('Card not in hand');
+            
+            // 確認手牌數量沒有變化
+            expect(humanPlayer.getCards().length).toBe(13);
         });
 
         it('真人玩家可以選擇與其他玩家換牌', () => {
@@ -158,6 +169,23 @@ describe('遊戲流程測試', () => {
                 .toThrow('Cannot exchange hands with yourself');
         });
 
+        it('真人玩家選擇卡牌時應該顯示所有手牌', () => {
+            // 創建一個 console.log 的 spy
+            const consoleSpy = jest.spyOn(console, 'log');
+            
+            // 選擇一張牌
+            const selectedCard = humanPlayer.getCards()[0];
+            humanPlayer.chooseCard(selectedCard);
+            
+            // 確認顯示了手牌信息
+            expect(consoleSpy).toHaveBeenCalledWith('Your current cards:');
+            
+            // 檢查是否為每張牌都調用了 console.log
+            expect(consoleSpy).toHaveBeenCalledTimes(15); // "Your current cards:" + 13張牌 + showCard 的輸出
+            
+            // 清理 spy
+            consoleSpy.mockRestore();
+        });
 
         it('回合中有玩家沒有手牌的情況', () => {
             // 移除真人玩家的所有手牌

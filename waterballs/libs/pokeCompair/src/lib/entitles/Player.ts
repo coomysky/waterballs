@@ -2,7 +2,7 @@ import { Game } from './Game';
 import { Hand } from './Hand';
 import { Card } from './Card';
 
-export class Player {
+export abstract class Player {
     private name: string;
     private hand: Hand;
     private points: number;
@@ -89,19 +89,5 @@ export class Player {
         return this.hand.removeCard(card);
     }
 
-    public takeRound(): Card {
-        if (this.getCards().length === 0) {
-            throw new Error('No cards in hand');
-        }
-        
-        if (this.isHuman) {
-            // 人類玩家需要主動選擇卡牌
-            throw new Error('Human player must choose a card');
-        } else {
-            // AI 玩家自動選擇第一張牌
-            const card = this.getCards()[0];
-            return this.showCard(card);
-        }
-    }
-
+    public abstract takeRound(): Card;
 }
