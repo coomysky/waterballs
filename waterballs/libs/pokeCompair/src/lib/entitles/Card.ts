@@ -22,6 +22,29 @@ export enum CardRank {
 }
 
 export class Card {
+    private static readonly RANK_NAMES: Record<CardRank, string> = {
+        [CardRank.Ace]: 'A',
+        [CardRank.Two]: '2',
+        [CardRank.Three]: '3',
+        [CardRank.Four]: '4',
+        [CardRank.Five]: '5',
+        [CardRank.Six]: '6',
+        [CardRank.Seven]: '7',
+        [CardRank.Eight]: '8',
+        [CardRank.Nine]: '9',
+        [CardRank.Ten]: '10',
+        [CardRank.Jack]: 'J',
+        [CardRank.Queen]: 'Q',
+        [CardRank.King]: 'K'
+    };
+
+    private static readonly SUIT_NAMES: Record<CardSuit, string> = {
+        [CardSuit.Club]: '梅花',
+        [CardSuit.Diamond]: '方塊',
+        [CardSuit.Heart]: '紅心',
+        [CardSuit.Spade]: '黑桃'
+    };
+
     constructor(
         private rank: CardRank,
         private suit: CardSuit,
@@ -30,6 +53,7 @@ export class Card {
             throw new Error('Card rank must be between 1 and 13');
         }
     }
+
     public set Rank(rank: CardRank) {
         if (rank < 0 || rank > 13) {
             throw new Error('Card rank must be between 1 and 13');
@@ -41,14 +65,17 @@ export class Card {
         this.suit = suit;
     }
 
-    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
-    public get Rank(): CardRank {
-        return this.rank;
+
+    public getRankDisplay(): string {
+        return Card.RANK_NAMES[this.rank];
     }
 
-    // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
-    public get Suit(): CardSuit {
-        return this.suit;
+    public getSuitDisplay(): string {
+        return Card.SUIT_NAMES[this.suit];
+    }
+
+    public toString(): string {
+        return `${this.getRankDisplay()} [${this.getSuitDisplay()}]`;
     }
 
     public equals(other: Card): boolean {

@@ -79,7 +79,7 @@ export abstract class Player {
     }
 
     public showCard(card: Card): Card {
-        console.log(`${this.getName()} shows ${card.Suit} of ${card.Rank}`);
+        console.log(`${this.getName()} shows ${card.toString()}`);
         return this.hand.removeCard(card);
     }
 

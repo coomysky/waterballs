@@ -16,7 +16,7 @@ export class HumanPlayer extends Player {
     public chooseCard(card: Card): Card {
         console.log('Your current cards:');
         this.getCards().forEach((c, index) => {
-            console.log(`${index + 1}. ${c.Rank} of ${c.Suit}`);
+            console.log(`${index + 1}. ${c.toString()}`);
         });
         
         if (!this.getCards().includes(card)) {
