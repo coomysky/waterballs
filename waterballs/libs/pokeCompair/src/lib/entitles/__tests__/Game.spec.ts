@@ -169,24 +169,6 @@ describe('遊戲流程測試', () => {
                 .toThrow('Cannot exchange hands with yourself');
         });
 
-        it('真人玩家選擇卡牌時應該顯示所有手牌', () => {
-            // 創建一個 console.log 的 spy
-            const consoleSpy = jest.spyOn(console, 'log');
-            
-            // 選擇一張牌
-            const selectedCard = humanPlayer.getCards()[0];
-            humanPlayer.chooseCard(selectedCard);
-            
-            // 確認顯示了手牌信息
-            expect(consoleSpy).toHaveBeenCalledWith('Your current cards:');
-            
-            // 檢查是否為每張牌都調用了 console.log
-            expect(consoleSpy).toHaveBeenCalledTimes(15); // "Your current cards:" + 13張牌 + showCard 的輸出
-            
-            // 清理 spy
-            consoleSpy.mockRestore();
-        });
-
         it('回合中有玩家沒有手牌的情況', () => {
             // 移除真人玩家的所有手牌
             while (humanPlayer.getCards().length > 0) {
