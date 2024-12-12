@@ -8,19 +8,13 @@ export abstract class Player {
     private points: number;
     private hasChangeHands: boolean;
     private game: Game | null;
-    private isHuman: boolean;
 
     constructor() {
-        this.name =  '';
+        this.name = '';
         this.hand = new Hand();
         this.hasChangeHands = false; // default
         this.game = null;
         this.points = 0;
-        this.isHuman = false;
-    }
-
-    public setIsHuman(isHuman: boolean): void {
-        this.isHuman = isHuman;
     }
 
     public setName(name: string): void {

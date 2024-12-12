@@ -4,7 +4,6 @@ import { Card } from './Card';
 export class HumanPlayer extends Player {
     constructor() {
         super();
-        this.setIsHuman(true);
     }
 
     public takeRound(): Card {

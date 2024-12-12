@@ -4,7 +4,6 @@ import { Card } from './Card';
 export class AIPlayer extends Player {
     constructor() {
         super();
-        this.setIsHuman(false);
     }
 
     public takeRound(): Card {
