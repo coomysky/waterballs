@@ -1,13 +1,8 @@
-import { Individual } from '../Individual';
-import { AbstractStrategy } from './AbstractStrategy';
+import { HabitBasedStrategy } from './HabitBasedStrategy';
 
-export class RevertHabitBasedStrategy extends AbstractStrategy {
-  protected calculateScore(individual: Individual, candidate: Individual): number {
-    const set1 = new Set(individual.habits);
-    return candidate.habits.filter(habit => set1.has(habit)).length;
-  }
+export class RevertHabitBasedStrategy extends HabitBasedStrategy {
 
   protected compareScore(scoreA: number, scoreB: number): number {
-    return scoreA - scoreB; // 選擇興趣少的
+    return scoreA - scoreB; // 選性趣少的
   }
 }
