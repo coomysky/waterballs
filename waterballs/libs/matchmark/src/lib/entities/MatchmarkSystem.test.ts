@@ -50,39 +50,35 @@ describe('月老系統整合測試..', () => {
   describe('近水樓台先得月 - 距離策略', () => {
     it('應該配對到最近的對象，是多想黏再一起？', () => {
       const strategy = new DistanceBasedStrategy();
-      const individual = new Individual(individuals[0]); // 位於 (0,0)
-      const match = matchmarkSystem.match(individual, strategy);
+      const individual = new Individual(individuals[0]); 
+      const match = matchmarkSystem.setStrategy(strategy).match(individual);
       
-      // 最近的應該是 id=4 的個體，位於 (1,1)
       expect(match.id).toBe(4);
     });
 
-    it('應該配對到最遠的對象，是不是怕見到面！ 顆顆', () => {
+    it('應該配對到最遠的對象，是多想逃離你？', () => {
       const strategy = new RevertDecorator(new DistanceBasedStrategy());
-      const individual = new Individual(individuals[0]); // 位於 (0,0)
-      const match = matchmarkSystem.match(individual, strategy);
+      const individual = new Individual(individuals[0]); 
+      const match = matchmarkSystem.setStrategy(strategy).match(individual);
       
-      // 最遠的應該是 id=3 的個體，位於 (6,8)
       expect(match.id).toBe(3);
     });
   });
 
   describe('臭味相投 - 興趣策略', () => {
-    it('應該配對到興趣最相投的對象，一起燃燒小宇宙的概念吧', () => {
+    it('應該配對到興趣最相投的對象,一起燃燒小宇宙的概念吧？', () => {
       const strategy = new HabitBasedStrategy();
       const individual = new Individual(individuals[0]); 
-      const match = matchmarkSystem.match(individual, strategy);
+      const match = matchmarkSystem.setStrategy(strategy).match(individual);
       
-      // id=4 的個體有最多共同興趣 ['運動', '閱讀', '旅遊']
       expect(match.id).toBe(4);
     });
 
-    it('應該配對到興趣最不合的對象,是要找吵架的對象媽？ ＸＤＤ', () => {
+    it('應該配對興趣最不合的對象,是要找吵架的對象？ＸＤＤ', () => {
       const strategy = new RevertDecorator(new HabitBasedStrategy());
       const individual = new Individual(individuals[0]); 
-      const match = matchmarkSystem.match(individual, strategy);
+      const match = matchmarkSystem.setStrategy(strategy).match(individual);
       
-      // id=3 的個體有最少共同興趣 ['旅遊']
       expect(match.id).toBe(3);
     });
   });
@@ -94,7 +90,7 @@ describe('月老系統整合測試..', () => {
       const strategy = new DistanceBasedStrategy();
       const individual = new Individual(props);
       
-      expect(() => soloSystem.match(individual, strategy)).toThrow('你很衰 現在沒人可以配對！');
+      expect(() => soloSystem.setStrategy(strategy).match(individual)).toThrow('你很衰 現在沒人可以配對！');
     });
 
     it('距離一樣時要選ID小的，畢竟先來後到很重要', () => {
@@ -121,14 +117,14 @@ describe('月老系統整合測試..', () => {
           age: 24,
           intro: 'test',
           habits: ['音樂'],
-          coord: { x: 3, y: 0 } // 跟 id=2 的位置一樣
+          coord: { x: 3, y: 0 }
         }
       ];
 
       const system = new MatchmarkSystem(sameDistanceIndividuals);
       const strategy = new DistanceBasedStrategy();
       const individual = new Individual(sameDistanceIndividuals[0]);
-      const match = system.match(individual, strategy);
+      const match = system.setStrategy(strategy).match(individual);
       
       // 當距離相同時，選擇 ID 小的
       expect(match.id).toBe(2);
@@ -165,7 +161,7 @@ describe('月老系統整合測試..', () => {
       const system = new MatchmarkSystem(sameHabitsIndividuals);
       const strategy = new HabitBasedStrategy();
       const individual = new Individual(sameHabitsIndividuals[0]);
-      const match = system.match(individual, strategy);
+      const match = system.setStrategy(strategy).match(individual);
       
       // 共同興趣數量相同時，選擇 ID 小的
       expect(match.id).toBe(2);
