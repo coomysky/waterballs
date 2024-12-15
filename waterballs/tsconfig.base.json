@@ -15,6 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@waterballs/match": ["libs/match/src/index.ts"],
+      "@waterballs/matchmark": ["libs/matchmark/src/index.ts"],
       "@waterballs/pokeCompair": ["libs/pokeCompair/src/index.ts"],
       "@waterballs/uno": ["libs/uno/src/index.ts"]
     }
