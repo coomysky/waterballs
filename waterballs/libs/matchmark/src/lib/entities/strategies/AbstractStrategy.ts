@@ -2,12 +2,12 @@ import { Individual } from '../Individual';
 import { Strategy } from './Strategy';
 
 export abstract class AbstractStrategy implements Strategy {
-  match(individual: Individual, candidates: Individual[]): Individual {
+  match(individual: Individual, candidates: Individual[], compare?: (bestPair: Individual[]) => Individual): Individual {
     if (candidates.length === 0) {
       throw new Error('No candidates available for matching');
     }
 
-    return candidates
+    const bestPair = candidates
       .filter((candidate) => candidate.id !== individual.id)
       .sort((a, b) => {
         const scoreA = this.calculateScore(individual, a);
@@ -18,7 +18,9 @@ export abstract class AbstractStrategy implements Strategy {
         }
         
         return this.compareScore(scoreA, scoreB);
-      })[0];
+      });
+
+      return compare ? compare(bestPair) : bestPair[0];
   }
 
   protected abstract calculateScore(individual: Individual, candidate: Individual): number;

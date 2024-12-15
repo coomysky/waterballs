@@ -2,8 +2,7 @@ import { Individual, IndividualProps } from './Individual';
 import { MatchmarkSystem } from './MatchmarkSystem';
 import { DistanceBasedStrategy } from './strategies/DistanceBasedStrategy';
 import { HabitBasedStrategy } from './strategies/HabitBasedStrategy';
-import { RevertDistanceBasedStrategy } from './strategies/RevertDistanceBasedStrategy';
-import { RevertHabitBasedStrategy } from './strategies/RevertHabitBasedStrategy';
+import { RevertDecorator } from './strategies/decorators/RevertDecorator';
 
 describe('月老系統整合測試..', () => {
   let matchmarkSystem: MatchmarkSystem;
@@ -59,7 +58,7 @@ describe('月老系統整合測試..', () => {
     });
 
     it('應該配對到最遠的對象，是不是怕見到面！ 顆顆', () => {
-      const strategy = new RevertDistanceBasedStrategy();
+      const strategy = new RevertDecorator(new DistanceBasedStrategy());
       const individual = new Individual(individuals[0]); // 位於 (0,0)
       const match = matchmarkSystem.match(individual, strategy);
       
@@ -79,12 +78,12 @@ describe('月老系統整合測試..', () => {
     });
 
     it('應該配對到興趣最不合的對象,是要找吵架的對象媽？ ＸＤＤ', () => {
-      const strategy = new RevertHabitBasedStrategy();
+      const strategy = new RevertDecorator(new HabitBasedStrategy());
       const individual = new Individual(individuals[0]); 
       const match = matchmarkSystem.match(individual, strategy);
       
-      // id=2 的個體有最少共同興趣 ['旅遊']
-      expect(match.id).toBe(2);
+      // id=3 的個體有最少共同興趣 ['旅遊']
+      expect(match.id).toBe(3);
     });
   });
 
