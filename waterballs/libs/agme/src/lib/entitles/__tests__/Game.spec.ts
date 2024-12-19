@@ -77,7 +77,6 @@ describe('玩家測試', () => {
     });
 
     it('真人玩家必須手動選擇卡牌', () => {
-        // 檢查初始狀態
         expect(humanPlayer.getCards().length).toBe(13);
         
         // 未選擇卡牌時應該拋出錯誤
@@ -88,11 +87,9 @@ describe('玩家測試', () => {
         const selectedCard = humanPlayer.getCards()[0];
         const card = humanPlayer.chooseCard(selectedCard);
         
-        // 確認選擇的卡牌正確
         expect(card).toBeDefined();
         expect(card.equals(selectedCard)).toBe(true);
         
-        // 確認可以正確出牌
         const playedCard = humanPlayer.playCard(selectedCard);
         expect(playedCard.equals(selectedCard)).toBe(true);
         expect(humanPlayer.getCards().length).toBe(12);

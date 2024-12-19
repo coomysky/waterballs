@@ -83,7 +83,7 @@ export class Game {
         
         activePlayers.forEach(player => {
             const card = player.takeRound();
-            console.log(`${player.getName()} played ${card.Suit} of ${card.Rank}`);
+            console.log(`${player.getName()} played ${card.toString()}`);
             this.addPlayedCard({ player, card });
         });
 

@@ -64,8 +64,7 @@ export class Card {
     public set Suit(suit: CardSuit) {
         this.suit = suit;
     }
-
-
+ 
     public getRankDisplay(): string {
         return Card.RANK_NAMES[this.rank];
     }
