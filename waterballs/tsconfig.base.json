@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@waterballs/game": ["libs/agme/src/index.ts"],
       "@waterballs/match": ["libs/match/src/index.ts"],
       "@waterballs/matchmark": ["libs/matchmark/src/index.ts"],
       "@waterballs/pokeCompair": ["libs/pokeCompair/src/index.ts"],
