@@ -37,6 +37,11 @@ export abstract class AbstractPlayer<T extends Card> implements Player<T> {
         }
 
         if (this.isHuman()) {
+            console.log(`Player ${this.getName()} is taking a round`);
+            console.log('Available cards plaease choose one:');
+            playableCards.forEach((card, index) => {
+                console.log(`${index + 1}. ${card.toString()}`);
+            }); 
             return this.takeHumanRound(playableCards);
         } else {
             return this.takeAIRound(playableCards);

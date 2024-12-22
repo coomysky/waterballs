@@ -62,6 +62,7 @@ export abstract class AbstractGame<T extends Card> implements Game<T> {
         const playedCard = currentPlayer.takeRound(this.tableCards[this.tableCards.length - 1]);
         
         if (playedCard) {
+            console.log(`${currentPlayer.getName()} played ${playedCard.toString()}`);
             this.tableCards.push(playedCard);
             this.afterPlayCard(this.tableCards);
             this.moveToNextPlayer();
